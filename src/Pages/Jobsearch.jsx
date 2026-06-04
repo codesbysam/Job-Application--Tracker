@@ -2,14 +2,16 @@ import React from 'react'
 
 function Jobsearch() {
   return (
-    <div className='h-screen'>
-      <h2 className="text-teal-dark text-3xl font-semibold mb-6">Job Search</h2>
+    <div>
+      <div className="page-header">
+        <h2 className="page-title">Job Search</h2>
+      </div>
 
-      <form className="max-w-md">
-        <div className="relative">
-          <div className="absolute inset-y-0 start-0 flex items-center pl-3">
+      <form style={{ maxWidth: "450px", marginTop: "1rem" }} onSubmit={(e) => e.preventDefault()}>
+        <div className="search-box-container">
+          <div className="search-icon-inside">
             <svg
-              className="w-4 h-4 text-gray"
+              style={{ width: "1rem", height: "1rem" }}
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -26,8 +28,8 @@ function Jobsearch() {
           </div>
           <input
             type="search"
-            className="block w-full p-4 pl-10 text-sm text-[#888] border border-gray-light rounded-md bg-white focus:border-teal outline-none"
-            placeholder="Search job roles and companies"
+            className="form-input search-input-box"
+            placeholder="Search job roles and companies..."
             required
           />
         </div>

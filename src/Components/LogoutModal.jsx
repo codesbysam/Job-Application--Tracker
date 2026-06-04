@@ -7,25 +7,22 @@ const LogoutModal = ({ setOpenLogoutModal }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-[#000]/50 z-40 flex justify-center items-center">
-      <div className="bg-white rounded-md py-8 px-6">
-        <div className="flex justify-between mb-2 items-center">
-          <h3 className="font-medium text-lg">Confirm Logout</h3>
-          <button
-            className="font-medium text-gray hover:bg-gray-light/90 hover:text-gray-dark rounded-md py-1.5 px-2"
-            onClick={closeLogoutModal}
-          >
-            x
-          </button>
+    <div className="modal-overlay" onClick={closeLogoutModal}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h3 className="modal-title">Confirm Logout</h3>
+          <button className="modal-close" onClick={closeLogoutModal}>×</button>
         </div>
-        <div className="mb-8 text-gray pr-8">
+        <div style={{ margin: "1rem 0 2rem 0", color: "var(--text-muted)" }}>
           <p>Are you sure you want to log out?</p>
         </div>
-        <div className="flex gap-4 justify-end">
-          <Link to="/login" className="py-2 px-3 text-sm font-medium text-center text-white bg-error rounded-md">
+        <div className="modal-actions">
+          <button onClick={closeLogoutModal} className="btn btn-secondary">
+            Cancel
+          </button>
+          <Link to="/login" className="btn btn-danger">
             Logout
           </Link>
-          <button onClick={closeLogoutModal}>Cancel</button>{" "}
         </div>
       </div>
     </div>

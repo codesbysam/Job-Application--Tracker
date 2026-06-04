@@ -37,92 +37,87 @@ const SideBar = () => {
 
   return (
     <div>
-      <nav
-        className={`px-5 py-3 fixed z-50 w-full lg:hidden bg-[#19211D] text-white ${
-          openSidebar ? "-translate-y-full" : "translate-x-0"
-        }`}
-      >
-        <div className="flex gap-3 items-center">
+      <nav className="mobile-header-nav">
+        <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
           <button
-            className="text-xl lg:hidden"
+            className="mobile-nav-toggle"
             title="Expand Sidebar"
             onClick={toggleMenu}
           >
-            <BsLayoutSidebarInset className="" />
+            <BsLayoutSidebarInset />
           </button>
-          <h3 className="md:text-lg">{pageTitle}</h3>
+          <h3 style={{ fontFamily: "var(--font-heading)", fontWeight: 700 }}>{pageTitle || "Job Tracker"}</h3>
         </div>
       </nav>
 
       {openSidebar && (
         <div
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+          className="sidebar-backdrop"
           onClick={toggleMenu}
         ></div>
       )}
 
-      <div
-        className={`fixed h-full top-0 left-0 bottom-0 z-40 w-56 py-4 lg:py-6 transition-transform 
- ${
-   openSidebar ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
- } bg-[#19211D]`}
-      >
-        <div className="rounded-[20px] overflow-y-auto px-4 bg-[#19211D] text-white h-full">
-          <div className="flex items-center justify-between pl-6">
-            <p className="">Job Tracker</p>
+      <div className={`sidebar ${openSidebar ? "open" : ""}`}>
+        <div>
+          <div className="sidebar-header">
+            <p className="sidebar-logo">Job Tracker</p>
             <button
-              className="text-xl lg:hidden"
+              className="mobile-nav-toggle"
+              style={{ fontSize: "1.25rem", color: "var(--text-light)" }}
               title="Minimize Sidebar"
               onClick={toggleMenu}
             >
-              <BsLayoutSidebarInset className="" />
+              <BsLayoutSidebarInset />
             </button>
           </div>
 
           {/* Top sidebar items */}
-          <ul className="space-y-4 mt-6">
-            {menuItems.map((item) => (
-              <li key={item.id} onClick={toggleMenu}>
-                <Link
-                  to={item.path}
-                  className="flex items-center gap-2 py-2 pl-5 rounded-full cursor-pointer hover:bg-[#E0E1E0] hover:text-primary-text transition-colors duration-300"
+          <ul className="sidebar-menu">
+            {menuItems.map((item) => {
+              const isActive = location.pathname.endsWith(item.path);
+              return (
+                <li
+                  key={item.id}
+                  className={`sidebar-item ${isActive ? "active" : ""}`}
+                  onClick={toggleMenu}
                 >
-                  <span className="text-xl">{item.icon}</span>
-                  <h4 className="">{item.label}</h4>
-                </Link>
-              </li>
-            ))}
+                  <Link to={item.path}>
+                    <span className="sidebar-item-icon" style={{ display: "flex", fontSize: "1.25rem" }}>{item.icon}</span>
+                    <span>{item.label}</span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
-        <div className="my-4 rounded shadow-sm absolute bottom-1 bg-[#19211D] w-44">
-          <ul className="py-3 text-white space-y-2">
-            <li>
-              <Link
-                to="settings"
-                className="flex items-center gap-2 py-2 pl-5 rounded-full cursor-pointer hover:bg-[#E0E1E0] hover:text-primary-text transition-colors duration-300"
-                onClick={toggleMenu}
-              >
-                <span className="text-xl">
-                  <RiSettings5Fill />
-                </span>
-                <div className="text-sm">Settings</div>
-              </Link>
-            </li>
-            <li>
-              <div
-                className="flex items-center gap-2 py-2 pl-5 rounded-full cursor-pointer hover:bg-[#E0E1E0] hover:text-primary-text transition-colors duration-300"
-                onClick={() => {
-                  toggleMenu();
-                  toggleLogoutModal();
-                }}
-              >
-                <span className="text-xl">
-                  <RiLogoutCircleRFill />
-                </span>
-                <div className="text-sm">Logout</div>
-              </div>
-            </li>
-          </ul>
+
+        <div className="sidebar-footer">
+          <div className="sidebar-item">
+            <Link
+              to="settings"
+              onClick={toggleMenu}
+            >
+              <span style={{ display: "flex", fontSize: "1.25rem" }}>
+                <RiSettings5Fill />
+              </span>
+              <span>Settings</span>
+            </Link>
+          </div>
+          <div className="sidebar-item">
+            <div
+              className="sidebar-action-item"
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                toggleMenu();
+                toggleLogoutModal();
+              }}
+            >
+              <span style={{ display: "flex", fontSize: "1.25rem" }}>
+                <RiLogoutCircleRFill />
+              </span>
+              <span>Logout</span>
+            </div>
+          </div>
         </div>
       </div>
 

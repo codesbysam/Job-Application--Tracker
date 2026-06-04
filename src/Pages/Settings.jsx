@@ -11,36 +11,38 @@ const Settings = () => {
     setShowDeleteAccountModal(true);
   }
   return (
-    <section className=" h-screen">
-      <div className="max-w-2xl mb-12">
-        <h2 className="text-teal-dark text-3xl font-semibold">
-          Change password
-        </h2>
-        <p className="text-gray mb-6">Manage your account password</p>
-        <form>
+    <div>
+      <div className="page-header">
+        <h2 className="page-title">Settings</h2>
+      </div>
+
+      <div className="settings-section-container">
+        <h3 className="settings-section-title">Change Password</h3>
+        <p className="settings-section-subtitle">Manage your account password</p>
+        <form onSubmit={(e) => e.preventDefault()}>
           {/* Current Password */}
-          <div>
+          <div className="form-group">
             <label className="sr-only">Current Password</label>
             <input
               type="password"
               placeholder="Current Password"
               required
-              className="border border-gray-light text-gray rounded-md p-3 outline-none focus:ring-[1px] focus:ring-gray w-full"
+              className="form-input"
             />
           </div>
           {/* New Password */}
-          <div>
+          <div className="form-group">
             <label className="sr-only">New Password</label>
-            <div className="relative mt-6">
+            <div className="settings-input-wrapper">
               <button
                 type="button"
                 title="Show/Hide Password"
-                className="text-gray absolute right-3 inset-y-0 my-auto active:text-gray"
+                className="settings-input-toggle-btn"
                 onClick={() => setPasswordHidden(!isPasswordHidden)}
               >
                 {isPasswordHidden ? (
                   <svg
-                    className="w-6 h-6"
+                    style={{ width: "1.25rem", height: "1.25rem" }}
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -65,7 +67,7 @@ const Settings = () => {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="w-6 h-6"
+                    style={{ width: "1.25rem", height: "1.25rem" }}
                   >
                     <path
                       strokeLinecap="round"
@@ -79,25 +81,25 @@ const Settings = () => {
                 type={isPasswordHidden ? "password" : "text"}
                 placeholder="New Password"
                 required
-                className="border border-gray-light text-gray rounded-md p-3 outline-none focus:ring-[1px] focus:ring-gray w-full "
+                className="form-input"
               />
             </div>
           </div>
           {/* Re Enter Password */}
-          <div>
+          <div className="form-group">
             <label className="sr-only">Re Enter Password</label>
-            <div className="relative mt-6">
+            <div className="settings-input-wrapper">
               <button
                 type="button"
                 title="Show/Hide Password"
-                className="text-gray absolute right-3 inset-y-0 my-auto active:text-gray"
+                className="settings-input-toggle-btn"
                 onClick={() =>
                   setConfirmPasswordHidden(!isConfirmPasswordHidden)
                 }
               >
                 {isConfirmPasswordHidden ? (
                   <svg
-                    className="w-6 h-6"
+                    style={{ width: "1.25rem", height: "1.25rem" }}
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -122,7 +124,7 @@ const Settings = () => {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="w-6 h-6"
+                    style={{ width: "1.25rem", height: "1.25rem" }}
                   >
                     <path
                       strokeLinecap="round"
@@ -136,44 +138,45 @@ const Settings = () => {
                 type={isConfirmPasswordHidden ? "password" : "text"}
                 placeholder="Re enter New Password"
                 required
-                className="border border-gray-light text-gray rounded-md p-3 outline-none focus:ring-[1px] focus:ring-gray w-full"
+                className="form-input"
               />
             </div>
           </div>
           {/* Cancel and Set New Password buttons */}
-          <div className="mt-4 font-semibold gap-4 flex">
+          <div style={{ display: "flex", gap: "1rem", marginTop: "2rem" }}>
             <Link
               to="/dashboard/dashboard"
-              className="bg-light-gray text-dark-gray rounded-md py-2 px-4"
+              className="btn btn-secondary"
             >
               Cancel
             </Link>
             <button
               type="submit"
-              className="bg-black text-white rounded-md py-2 px-6 flex justify-center items-center gap-3 text-sm"
+              className="btn btn-primary"
             >
-              Save
+              Save Password
             </button>
           </div>
         </form>
       </div>
-      {/* DELETE USER ACCOUNT */}
 
-      <div>
-        <h2 className=" text-3xl font-semibold">Delete Account:</h2>
-        <p className="text-gray mb-6">Permanently delete your account.</p>
+      {/* DELETE USER ACCOUNT */}
+      <div className="settings-section-container danger-zone">
+        <h3 className="settings-section-title danger-zone-title">Delete Account</h3>
+        <p className="settings-section-subtitle">Permanently delete your account and all data.</p>
         <button
-          type="submit"
-          className="border border-[#af1818] text-[#af1818] rounded-md py-2 px-2.5 flex justify-center items-center gap-3"
+          type="button"
+          className="btn btn-danger-outline"
           onClick={handleDeleteModal}
         >
           Delete my Account
         </button>
       </div>
+
       {showDeleteAccountModal && (
         <DeleteAccountModal setDeleteAccountModal={setShowDeleteAccountModal} />
       )}
-    </section>
+    </div>
   );
 };
 

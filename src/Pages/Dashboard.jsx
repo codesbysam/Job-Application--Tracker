@@ -109,206 +109,163 @@ const Dashboard = () => {
 
   return (
     <div>
-      <div className="mb-5 flex flex-wrap justify-between items-center">
-        <h1 className="font-bold text-[#2A2A2A] text-xl lg:text-2xl">
-          {getGreeting()} {userName || "User"},
+      <div className="page-header">
+        <h1 className="page-title">
+          {getGreeting()}, {userName || "User"}
         </h1>
-        <div className="gap-2 items-center border-l-2 border-[#5D6661] pl-4 hidden lg:flex">
-          <div>
-            <p className="text-[12px]">{userName || "User"}</p>
-            <p className="text-[12px]">{userEmail || "you@beautiful.com"}</p>
+        <div className="user-profile-badge">
+          <div className="user-info">
+            <p>{userName || "User"}</p>
+            <p>{userEmail || "you@example.com"}</p>
           </div>
         </div>
       </div>
-      <div className="rounded-lg mb-4">
-        <div>
-          <h2 className="text-xl text-gray-dark">Getting Started</h2>
-          <div className="w-44 bg-light-gray rounded-full h-1.5 mt-1.5">
-            <div className="bg-dark-gray h-1.5 rounded-full w-20"></div>
+
+      <div className="getting-started-section">
+        <h2 className="getting-started-title">Getting Started</h2>
+        <div className="progress-container">
+          <div className="progress-bar-bg">
+            <div className="progress-bar-fill" style={{ width: "45%" }}></div>
           </div>
-          <p className="mt-1 text-[12px]">45% done</p>
-          <div className="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-3 mb-12">
-            <DashboardCard
-              to="/dashboard/profile"
-              icon={LuUserCircle2}
-              title="Complete your profile"
-              description="Add more details"
-            />
-            <DashboardCard
-              to="/dashboard/job"
-              icon={LuSearch}
-              title="Search for Jobs"
-              description="Find jobs that match your skills"
-            />
-            <DashboardCard
-              to="/dashboard/applications"
-              icon={BsBriefcase}
-              title="Update application status"
-              description="Keep your job applications up to date"
-            />
-            <DashboardCard
-              to="/dashboard"
-              icon={FaRegLightbulb}
-              title="Prepare for Interview"
-              description="Browse our interview resources to help you prepare"
-            />
+          <span className="progress-text">45% done</span>
+        </div>
+
+        <div className="dashboard-grid">
+          <DashboardCard
+            to="/dashboard/profile"
+            icon={LuUserCircle2}
+            title="Complete profile"
+            description="Add your professional info"
+          />
+          <DashboardCard
+            to="/dashboard/job"
+            icon={LuSearch}
+            title="Find Jobs"
+            description="Browse matching job roles"
+          />
+          <DashboardCard
+            to="/dashboard/applications"
+            icon={BsBriefcase}
+            title="Update applications"
+            description="Track interview and offer status"
+          />
+          <DashboardCard
+            to="/dashboard"
+            icon={FaRegLightbulb}
+            title="Interview Prep"
+            description="Prepare using search tips"
+          />
+        </div>
+      </div>
+
+      <div className="analytics-layout">
+        <div className="analytics-card">
+          <div className="analytics-card-header">
+            <h3 style={{ fontFamily: "var(--font-heading)", fontWeight: 700, fontSize: "1.15rem" }}>
+              Applications Tracking
+            </h3>
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="btn-icon"
+              title="Chart options"
+            >
+              <CiMenuKebab style={{ transform: "rotate(90deg)" }} />
+            </button>
+            {menuOpen && (
+              <div className="menu-dropdown">
+                <button
+                  className="menu-dropdown-item"
+                  onClick={() => {
+                    setChartType("doughnut");
+                    setMenuOpen(false);
+                  }}
+                >
+                  Doughnut Chart
+                </button>
+                <button
+                  className="menu-dropdown-item"
+                  onClick={() => {
+                    setChartType("pie");
+                    setMenuOpen(false);
+                  }}
+                >
+                  Pie Chart
+                </button>
+              </div>
+            )}
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-4">
-            <div className="lg:col-span-2 p-4 relative">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg">Applications Tracking</h3>
-                <span
-                  onClick={() => setMenuOpen(!menuOpen)}
-                  className="hover:bg-[#E8E8E8] p-1.5 rounded-md relative"
-                >
-                  <CiMenuKebab className="rotate-90" />
-                  {menuOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white border border-[#E8E8E8] rounded shadow-sm z-10 p-2">
-                      <ul>
-                        <li
-                          className="p-2 hover:bg-[#E0E1E0] cursor-pointer text-sm rounded-md"
-                          onClick={() => setChartType("doughnut")}
-                        >
-                          Doughnut Chart
-                        </li>
-                        <li
-                          className="p-2 hover:bg-[#E0E1E0] cursor-pointer text-sm rounded-md"
-                          onClick={() => setChartType("pie")}
-                        >
-                          Pie Chart
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-                </span>
+          <div className="chart-wrapper">
+            <div style={{ width: "100%", maxWidth: "240px" }}>
+              {chartType === "doughnut" ? (
+                <Doughnut data={data} options={options} />
+              ) : (
+                <Pie data={data} options={options} />
+              )}
+            </div>
+            <div className="chart-legend-container">
+              <div className="legend-item">
+                <span style={{ display: "inline-block", width: "12px", height: "12px", borderRadius: "3px", backgroundColor: "#36A2EB" }}></span>
+                <span>Applied: {totalApplications - totalInterviews - totalOffers - totalRejected}</span>
               </div>
-              <div className="w-full">
-                {chartType === "doughnut" ? (
-                  <div className="max-h-[400px] flex gap-20 items-center">
-                    <Doughnut data={data} options={options} />
-                    <div className="space-y-2 hidden md:block lg:hidden">
-                      <div className="flex items-center">
-                        <p className="text-sm text-gray mr-1">
-                          Total Applications:
-                        </p>
-                        <p className="font-bold text-primary-text">
-                          {totalApplications}
-                        </p>
-                      </div>
-                      <div className="flex items-center">
-                        <p className="text-sm text-gray mr-1">Total Rejected</p>
-                        <p className="font-bold text-primary-text">
-                          {totalRejected}
-                        </p>
-                      </div>
-                      <div className="flex items-center">
-                        <p className="text-sm text-gray mr-1">
-                          Total Interviews
-                        </p>
-                        <p className="font-bold text-primary-text">
-                          {totalInterviews}
-                        </p>
-                      </div>
-                      <div className="flex items-center">
-                        <p className="text-sm text-gray mr-1">Total Offers</p>
-                        <p className="font-bold text-primary-text">
-                          {totalOffers}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+              <div className="legend-item">
+                <span style={{ display: "inline-block", width: "12px", height: "12px", borderRadius: "3px", backgroundColor: "#FFCE56" }}></span>
+                <span>Interviews: {totalInterviews}</span>
+              </div>
+              <div className="legend-item">
+                <span style={{ display: "inline-block", width: "12px", height: "12px", borderRadius: "3px", backgroundColor: "#00842B" }}></span>
+                <span>Offers: {totalOffers}</span>
+              </div>
+              <div className="legend-item">
+                <span style={{ display: "inline-block", width: "12px", height: "12px", borderRadius: "3px", backgroundColor: "#FF6384" }}></span>
+                <span>Rejected: {totalRejected}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="stats-grid-row">
+            <div className="stat-box">
+              <span className="stat-box-label">Total Applications</span>
+              <span className="stat-box-value">{totalApplications}</span>
+            </div>
+            <div className="stat-box">
+              <span className="stat-box-label">Interviews Scheduled</span>
+              <span className="stat-box-value">{totalInterviews}</span>
+            </div>
+            <div className="stat-box">
+              <span className="stat-box-label">Job Offers</span>
+              <span className="stat-box-value">{totalOffers}</span>
+            </div>
+            <div className="stat-box">
+              <span className="stat-box-label">Rejected</span>
+              <span className="stat-box-value">{totalRejected}</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 style={{ fontFamily: "var(--font-heading)", fontWeight: 700, fontSize: "1.15rem", marginBottom: "1rem" }}>
+            Resources
+          </h3>
+          <div className="resources-list">
+            {resources.map((resource, index) => (
+              <div key={index} className="resource-item">
+                <p className="resource-title">{resource.title}</p>
+                {resource.viewUrl ? (
+                  <a
+                    href={resource.viewUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="resource-link"
+                    title="View Link"
+                  >
+                    <FaLongArrowAltRight />
+                  </a>
                 ) : (
-                  <div className="max-h-[400px] flex gap-20 items-center">
-                    <Pie data={data} options={options} />
-                    <div className="space-y-2 hidden md:block lg:hidden">
-                      <div className="flex items-center">
-                        <p className="text-sm text-gray mr-1">
-                          Total Applications:
-                        </p>
-                        <p className="font-bold text-primary-text">
-                          {totalApplications}
-                        </p>
-                      </div>
-                      <div className="flex items-center">
-                        <p className="text-sm text-gray mr-1">Total Rejected</p>
-                        <p className="font-bold text-primary-text">
-                          {totalRejected}
-                        </p>
-                      </div>
-                      <div className="flex items-center">
-                        <p className="text-sm text-gray mr-1">
-                          Total Interviews
-                        </p>
-                        <p className="font-bold text-primary-text">
-                          {totalInterviews}
-                        </p>
-                      </div>
-                      <div className="flex items-center">
-                        <p className="text-sm text-gray mr-1">Total Offers</p>
-                        <p className="font-bold text-primary-text">
-                          {totalOffers}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  <span style={{ fontSize: "0.75rem", color: "var(--text-light)" }}>Coming soon</span>
                 )}
               </div>
-              <div className="mt-4 grid grid-cols-2 gap-2 md:hidden lg:grid">
-                <div className="flex items-center">
-                  <p className="text-sm text-gray mr-1">Total Applications:</p>
-                  <p className="font-bold text-primary-text">
-                    {totalApplications}
-                  </p>
-                </div>
-                <div className="flex items-center">
-                  <p className="text-sm text-gray mr-1">Total Rejected</p>
-                  <p className="font-bold text-primary-text">{totalRejected}</p>
-                </div>
-                <div className="flex items-center">
-                  <p className="text-sm text-gray mr-1">Total Interviews</p>
-                  <p className="font-bold text-primary-text">
-                    {totalInterviews}
-                  </p>
-                </div>
-                <div className="flex items-center">
-                  <p className="text-sm text-gray mr-1">Total Offers</p>
-                  <p className="font-bold text-primary-text">{totalOffers}</p>
-                </div>
-              </div>
-            </div>
-            <div>
-              <h3 className="mb-2">Resources</h3>
-              <div className="grid md:grid-cols-2 gap-3 lg:grid-cols-1">
-                {resources.map((resource, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between py-2 cursor-pointer border-l-4 pl-3 pr-2 rounded shadow-sm"
-                  >
-                    <p>{resource.title}</p>
-                    <a
-                      href={resource.viewUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hidden md:flex items-center gap-2 bg-white rounded-full border p-1.5 pl-4 hover:bg-dark-gray hover:text-white hover:shadow-md group"
-                    >
-                      <p className="hidden md:flex">View</p>
-                      <div className="group-hover:bg-gray group-hover:rounded-full group-hover:p-1.5 bg-white p-1.5">
-                        <FaLongArrowAltRight />
-                      </div>
-                    </a>
-                    <a
-                      href={resource.viewUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="md:hidden p-1.5 hover:bg-dark-gray rounded-full hover:text-white border"
-                    >
-                      <FaLongArrowAltRight />
-                    </a>
-                  </div>
-                ))}
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

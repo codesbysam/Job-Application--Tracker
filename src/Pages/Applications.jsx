@@ -54,25 +54,22 @@ const Applications = () => {
   };
 
   return (
-    <div className="h-screen">
-      <span className="flex justify-between items-center mb-4">
-        <h2 className="text-3xl font-semibold">Applications</h2>
-        <div className="flex items-center gap-4">
-          <span className="hidden md:flex items-center gap-2">
-            <p className="text-secondary-text">Total Applications:</p>
-            <p className="font-semibold">{jobs.length}</p>
-          </span>
-          <button
-            className="bg-black text-white rounded-full py-2 px-2.5 flex justify-center items-center gap-3 text-sm"
-            onClick={handleOpenJobModal}
-          >
-            <p className="hidden md:flex">Add new Job</p>
-            <span className="text-sm">
+    <div>
+      <div className="page-header">
+        <h2 className="page-title">Applications</h2>
+        <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <span style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>Total Applications:</span>
+            <span style={{ fontWeight: 700 }}>{jobs.length}</span>
+          </div>
+          <button className="btn btn-primary" onClick={handleOpenJobModal}>
+            <span>Add new Job</span>
+            <span style={{ display: "flex", fontSize: "0.85rem" }}>
               <FaPlus />
             </span>
           </button>
         </div>
-      </span>
+      </div>
 
       {showJobModal && (
         <AddNewJobs setJobModal={setShowJobModal} onAddJob={handleAddJob} />
@@ -86,75 +83,79 @@ const Applications = () => {
         />
       )}
 
-      <div className="flex justify-between mb-4">
-        <form className="flex items-center gap-2 border border-tertiary-text rounded-lg pl-2 py-1.5 w-36">
-          <label className="sr-only">Search</label>
-          <LuSearch className="text-gray text-sm" />
+      <div className="actions-row">
+        <form className="search-box-container" onSubmit={(e) => e.preventDefault()}>
+          <span className="search-icon-inside">
+            <LuSearch />
+          </span>
           <input
             type="search"
             name="search"
-            placeholder="search"
-            className="w-24 outline-none bg-white"
+            placeholder="Search applications..."
+            className="form-input search-input-box"
           />
         </form>
-        <div className="flex justify-between items-center gap-4">
-          <div className="flex items-center gap-2 py-1 px-2 cursor-pointer text-tertiary-text">
-            <button onClick={() => setIsCardView(true)}>
-              <FaThLarge />
-            </button>
-            <button onClick={() => setIsCardView(false)}>
-              <FaList />
-            </button>
-          </div>
+        
+        <div className="view-toggle-buttons">
+          <button
+            onClick={() => setIsCardView(true)}
+            className={`view-toggle-btn ${isCardView ? "active" : ""}`}
+            title="Grid View"
+          >
+            <FaThLarge />
+          </button>
+          <button
+            onClick={() => setIsCardView(false)}
+            className={`view-toggle-btn ${!isCardView ? "active" : ""}`}
+            title="List View"
+          >
+            <FaList />
+          </button>
         </div>
       </div>
 
-      <div className="mb-4 border-b overflow-auto">
-        <ul className="flex text-sm font-medium text-center">
-          {["all", "applied", "interview", "offered", "rejected"].map((tab) => (
-            <li className="me-2" key={tab}>
-              <button
-                className={`inline-block p-4 ${
-                  activeTab === tab ? "border-b-2" : ""
-                }`}
-                onClick={() => setActiveTab(tab)}
-              >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </button>
-            </li>
-          ))}
-        </ul>
+      <div className="tabs-navigation">
+        {["all", "applied", "interview", "offered", "rejected"].map((tab) => (
+          <button
+            key={tab}
+            className={`tab-btn ${activeTab === tab ? "active" : ""}`}
+            onClick={() => setActiveTab(tab)}
+          >
+            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+          </button>
+        ))}
       </div>
 
       {/* Job Card view */}
       {isCardView ? (
-        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mb-12">
+        <div className="jobs-grid">
           {jobs
             .filter((job) => activeTab === "all" || job.status === activeTab)
             .map((job) => (
               <div
                 key={job.id}
-                className="rounded-lg overflow-hidden mt-4 cursor-pointer hover:shadow-lg bg-[#F8F9F8] border border-light-gray"
+                className="job-card"
                 onClick={() => handleOpenEditModal(job)}
               >
-                <div className="p-4">
-                  <div className="flex justify-between items-center">
-                    <p className="text-teal text-lg font-semibold">
-                      {job.jobTitle}
-                    </p>
-                    <span
-                      className="text-gray text-lg cursor-pointer"
+                <div>
+                  <div className="job-card-header">
+                    <p className="job-card-title">{job.jobTitle}</p>
+                    <button
+                      style={{ color: "var(--text-light)", fontSize: "1.2rem", display: "flex" }}
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDeleteJob(job);
                       }}
+                      title="Delete Application"
                     >
                       <MdClose />
-                    </span>
+                    </button>
                   </div>
-                  <h3 className="text-xl mt-2">{job.companyName}</h3>
-                  <p className="text-xs text-gray mt-2">
-                    {job.status} on{" "}
+                  <h3 className="job-card-company">{job.companyName}</h3>
+                </div>
+                <div className="job-card-footer">
+                  <span className={`status-badge ${job.status}`}>{job.status}</span>
+                  <p className="job-card-date">
                     {new Date(job.applicationDate).toLocaleDateString()}
                   </p>
                 </div>
@@ -163,15 +164,15 @@ const Applications = () => {
         </div>
       ) : (
         // Job List view
-        <div className="overflow-x-auto rounded-t-2xl">
-          <table className="w-full text-sm text-left">
-            <thead className="bg-[#E2E6E4] text-primary-text">
+        <div className="table-responsive">
+          <table className="custom-table">
+            <thead>
               <tr>
-                <th className="px-6 py-3"></th>
-                <th className="px-6 py-3">Title</th>
-                <th className="px-6 py-3">Company</th>
-                <th className="px-6 py-3">Status</th>
-                <th className="px-6 py-3">Date</th>
+                <th style={{ width: "50px", textAlign: "center" }}></th>
+                <th>Job Title</th>
+                <th>Company</th>
+                <th>Status</th>
+                <th>Applied Date</th>
               </tr>
             </thead>
             <tbody>
@@ -180,11 +181,11 @@ const Applications = () => {
                   (job) => activeTab === "all" || job.status === activeTab
                 )
                 .map((job) => (
-                  <tr key={job.id} className="border-b border-light-gray">
-                    <td className="px-6 py-4 text-center">
+                  <tr key={job.id}>
+                    <td style={{ textAlign: "center" }}>
                       <input
                         type="checkbox"
-                        className="form-checkbox"
+                        className="table-checkbox"
                         checked={checkedJobs.some(
                           (checkedJob) => checkedJob.id === job.id
                         )}
@@ -192,14 +193,16 @@ const Applications = () => {
                       />
                     </td>
                     <td
-                      className="px-6 py-4 cursor-pointer"
+                      style={{ cursor: "pointer", fontWeight: 600, color: "var(--primary)" }}
                       onClick={() => handleOpenEditModal(job)}
                     >
                       {job.jobTitle}
                     </td>
-                    <td className="px-6 py-4">{job.companyName}</td>
-                    <td className="px-6 py-4">{job.status}</td>
-                    <td className="px-6 py-4">
+                    <td>{job.companyName}</td>
+                    <td>
+                      <span className={`status-badge ${job.status}`}>{job.status}</span>
+                    </td>
+                    <td>
                       {new Date(job.applicationDate).toLocaleDateString()}
                     </td>
                   </tr>
@@ -207,9 +210,13 @@ const Applications = () => {
             </tbody>
           </table>
           {checkedJobs.length > 0 && (
-            <div className="flex justify-end mt-4 absolute right-0 mr-5">
+            <div className="bulk-actions-floating">
+              <span style={{ fontSize: "0.875rem", fontWeight: 600 }}>
+                {checkedJobs.length} application(s) selected
+              </span>
               <button
-                className="bg-[#c40707] text-white py-1 px-4 rounded text-sm"
+                className="btn btn-danger"
+                style={{ padding: "0.5rem 1rem" }}
                 onClick={() => {
                   const confirmDelete = window.confirm(
                     "Are you sure you want to delete the selected jobs?"

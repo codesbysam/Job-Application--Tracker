@@ -18,43 +18,56 @@ const EditJobModal = ({ job, setEditModal, onEditJob }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 z-40 flex justify-center items-center">
-      <div className="p-6 w-[80%] lg:w-[50%] shadow-md bg-[#f3f3f3] rounded-lg">
-        <div>
-          <h2 className="text-2xl font-semibold mb-4">Edit Job</h2>
-          <form className="flex flex-col gap-4">
+    <div className="modal-overlay" onClick={handleCancel}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h2 className="modal-title">Edit Job</h2>
+          <button type="button" className="modal-close" onClick={handleCancel}>×</button>
+        </div>
+        <form onSubmit={(e) => e.preventDefault()}>
+          <div className="form-group">
+            <label className="form-label">Job Title</label>
             <input
               type="text"
               name="jobTitle"
               value={editedJob.jobTitle}
               onChange={handleInputChange}
               placeholder="Job Title"
-              className="border border-light-gray rounded-md p-2 outline-none focus:ring-[1px] focus:ring-[#E0E1E6]"
+              className="form-input"
               required
             />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Company Name</label>
             <input
               type="text"
               name="companyName"
               value={editedJob.companyName}
               onChange={handleInputChange}
               placeholder="Company Name"
-              className="border border-light-gray rounded-md p-2 outline-none focus:ring-[1px] focus:ring-[#E0E1E6]"
+              className="form-input"
               required
             />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Application Date</label>
             <input
               type="date"
               name="applicationDate"
               value={editedJob.applicationDate}
               onChange={handleInputChange}
               placeholder="Application Date"
-              className="border border-light-gray rounded-md p-2 outline-none focus:ring-[1px] focus:ring-[#E0E1E6]"
+              className="form-input"
               required
             />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Status</label>
             <select
               name="status"
               value={editedJob.status}
               onChange={handleInputChange}
-              className="border border-light-gray rounded-md p-2 outline-none focus:ring-[1px] focus:ring-[#E0E1E6]"
+              className="form-select"
               required
             >
               <option value="applied">Applied</option>
@@ -62,24 +75,16 @@ const EditJobModal = ({ job, setEditModal, onEditJob }) => {
               <option value="offered">Offered</option>
               <option value="rejected">Rejected</option>
             </select>
-            <div className="flex gap-3 justify-end">
-              <button
-                type="button"
-                onClick={handleSaveChanges}
-                className="bg-black text-white rounded-md py-2 px-4"
-              >
-                Save
-              </button>
-              <button
-                type="button"
-                onClick={handleCancel}
-                className="bg-light-gray text-primary-text rounded-md py-2 px-4"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
+          </div>
+          <div className="modal-actions">
+            <button type="button" onClick={handleCancel} className="btn btn-secondary">
+              Cancel
+            </button>
+            <button type="button" onClick={handleSaveChanges} className="btn btn-accent">
+              Save Changes
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
