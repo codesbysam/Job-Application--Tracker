@@ -1,8 +1,7 @@
 // One place that knows how to talk to our backend.
 // Every page imports from here instead of writing fetch() calls everywhere.
 
-const BASE_URL = "http://localhost:5000/api";
-
+const BASE_URL = "https://job-application-tracker-801b.onrender.com/api";
 // Small wrapper around fetch() that adds the JWT token automatically
 // (if the user is logged in) and throws a readable error on failure.
 async function request(path, { method = "GET", body } = {}) {
